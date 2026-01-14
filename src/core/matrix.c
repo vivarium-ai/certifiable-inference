@@ -122,3 +122,26 @@ void fx_matrix_apply(fx_matrix_t* mat, fixed_t (*fn)(fixed_t)) {
         mat->data[i] = fn(mat->data[i]);
     }
 }
+
+void fx_matrix_add_bias(fx_matrix_t* mat, const fx_matrix_t* bias) {
+    /* SRS-004.3: Validate dimensions */
+    if (!mat || !bias || !mat->data || !bias->data) {
+        return;
+    }
+
+    /* Bias must be a row vector (1×N) matching matrix width */
+    if (mat->cols != bias->cols || bias->rows != 1) {
+        return;
+    }
+
+    /* SRS-004.4: Broadcast bias to each row using fixed-point addition */
+    for (uint16_t i = 0; i < mat->rows; i++) {
+        for (uint16_t j = 0; j < mat->cols; j++) {
+            /* Add bias[j] to mat[i][j] */
+            mat->data[i * mat->cols + j] = fixed_add(
+                mat->data[i * mat->cols + j],
+                bias->data[j]
+            );
+        }
+    }
+}

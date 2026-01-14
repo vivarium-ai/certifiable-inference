@@ -155,4 +155,30 @@ void fx_matrix_add(const fx_matrix_t* A, const fx_matrix_t* B, fx_matrix_t* C);
  */
 void fx_matrix_apply(fx_matrix_t* mat, fixed_t (*fn)(fixed_t));
 
+/**
+ * @brief Add bias vector to each row of matrix.
+ *
+ * @details Broadcasts 1×N bias vector to each row of M×N matrix.
+ * Required for standard dense layer: y = activation(Wx + b)
+ *
+ * Example:
+ *   Matrix (2×3):     Bias (1×3):      Result (2×3):
+ *   [1  2  3]         [10 20 30]       [11 22 33]
+ *   [4  5  6]                          [14 25 36]
+ *
+ * @param[in,out] mat Matrix to add bias to (M×N)
+ * @param[in] bias Bias vector (1×N)
+ *
+ * @pre mat and bias are valid pointers
+ * @pre mat->cols == bias->cols
+ * @pre bias->rows == 1
+ * @post mat[i][j] += bias[j] for all i, j
+ *
+ * @complexity O(rows * cols)
+ * @determinism Bit-perfect (uses fixed-point addition)
+ *
+ * @traceability SRS-004.3, SRS-004.4
+ */
+void fx_matrix_add_bias(fx_matrix_t* mat, const fx_matrix_t* bias);
+
 #endif /* MATRIX_H */
