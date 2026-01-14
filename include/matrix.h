@@ -39,10 +39,13 @@ typedef struct {
 } fx_matrix_t;
 
 /**
- * @brief Initialize a matrix using a provided buffer.
+ * @brief Initialize a matrix using a provided buffer (zeros buffer).
  *
  * @details Zeros the buffer to ensure deterministic initial state.
  * No dynamic allocation - buffer provided by caller.
+ *
+ * @warning This function zeros the buffer. If your buffer already contains
+ *          data, use fx_matrix_attach() instead to preserve contents.
  *
  * @param[out] mat Matrix structure to initialize
  * @param[in] buffer Pre-allocated memory buffer
@@ -59,6 +62,43 @@ typedef struct {
  * @traceability SRS-003.1, SRS-003.2
  */
 void fx_matrix_init(fx_matrix_t* mat, fixed_t* buffer, uint16_t rows, uint16_t cols);
+
+/**
+ * @brief Attach a pre-populated buffer to a matrix (no zeroing).
+ *
+ * @details Binds an existing buffer to a matrix structure without
+ * modifying buffer contents. Use this when the buffer already contains
+ * data that must be preserved.
+ *
+ * Use cases:
+ * - Wrapping statically initialized arrays
+ * - Attaching buffers populated by external sources
+ * - Reinterpreting raw data as matrices
+ *
+ * @param[out] mat Matrix structure to initialize
+ * @param[in] buffer Pre-allocated memory buffer (contents preserved)
+ * @param[in] rows Number of rows
+ * @param[in] cols Number of columns
+ *
+ * @pre mat and buffer are valid pointers
+ * @pre buffer size >= rows * cols * sizeof(fixed_t)
+ * @pre buffer contains valid fixed_t data
+ * @post Matrix attached to buffer, contents unchanged
+ *
+ * @complexity O(1)
+ * @determinism Bit-perfect (no data modification)
+ *
+ * @traceability SRS-003.1
+ */
+static inline void fx_matrix_attach(fx_matrix_t* mat, fixed_t* buffer,
+                                    uint16_t rows, uint16_t cols) {
+    if (!mat || !buffer) {
+        return;
+    }
+    mat->data = buffer;
+    mat->rows = rows;
+    mat->cols = cols;
+}
 
 /**
  * @brief Deterministic matrix multiplication: C = A × B

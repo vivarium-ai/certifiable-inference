@@ -40,15 +40,52 @@ Pure C99 implementation with zero hidden dependencies. Designed for MISRA-C comp
 
 ## Status
 
-🚧 **In Development** - Foundation being built
-
 **Current components:**
-- ✅ Deterministic hash table (complete)
-- 🚧 Fixed-point math library (in progress)
-- 📋 Neural network layers (planned)
-- 📋 ONNX model loader (planned)
+- ✅ Fixed-point arithmetic (Q16.16, deterministic across platforms)
+- ✅ Matrix operations (multiply, transpose, element-wise)
+- ✅ 2D Convolution (zero dynamic allocation, O(OH×OW×KH×KW))
+- ✅ Activation functions (ReLU, deterministic thresholding)
+- ✅ Max Pooling (2×2 stride-2, dimension reduction)
+- ✅ Timing verification (proven <5% jitter for 95th percentile)
+- 📋 Model loader (ONNX import - planned)
+- 📋 Quantization tools (FP32→Q16.16 conversion - planned)
 
 ## Quick Start
+
+### Basic Inference Pipeline
+
+```c
+#include "matrix.h"
+#include "convolution.h"
+#include "activation.h"
+#include "pooling.h"
+
+// Pre-allocated buffers (no malloc)
+fixed_t input_buf[256];    // 16×16 input
+fixed_t kernel_buf[9];     // 3×3 kernel
+fixed_t conv_buf[196];     // 14×14 after conv
+fixed_t pool_buf[49];      // 7×7 after pooling
+
+// Initialize matrices
+fx_matrix_t input, kernel, conv_out, pool_out;
+fx_matrix_init(&input, input_buf, 16, 16);
+fx_matrix_init(&kernel, kernel_buf, 3, 3);
+fx_matrix_init(&conv_out, conv_buf, 14, 14);
+fx_matrix_init(&pool_out, pool_buf, 7, 7);
+
+// Load input and kernel (quantized to fixed-point)
+load_input(&input);
+load_kernel(&kernel);
+
+// Inference pipeline
+fx_conv2d(&input, &kernel, &conv_out);    // Convolution
+fx_relu(&conv_out, &conv_out);            // Activation
+fx_maxpool_2x2(&conv_out, &pool_out);     // Dimension reduction
+
+// Result: 7×7 feature map, bit-perfect across all platforms
+```
+
+### Deterministic Hash Table
 
 ```c
 #include "deterministic_hash.h"
@@ -66,9 +103,102 @@ d_table_insert(&map, "oxygen_sat", 98);
 d_table_iterate(&map, print_callback);
 ```
 
+## Architecture
+
+### Fixed-Point Arithmetic (Q16.16)
+- **16 integer bits** + **16 fractional bits**
+- Range: -32768.0 to +32767.99998
+- Resolution: 0.0000152588 (1/65536)
+- **Bit-perfect** across x86, ARM, RISC-V, MIPS
+
+### Zero Dynamic Allocation
+- All buffers pre-allocated by caller
+- Stack usage: O(1) for all operations
+- No `malloc()`, `free()`, or heap fragmentation
+- Enables static memory analysis (required for DO-178C Level A)
+
+### Deterministic Execution
+- Fixed iteration counts (dimension-dependent, not data-dependent)
+- No floating-point operations
+- No data-dependent branches in hot paths
+- **Proven <5% jitter** at 95th percentile (see `tests/benchmarks/`)
+
+## Testing
+
+### Unit Tests
+```bash
+cd build
+./test_fixed_point    # Fixed-point arithmetic
+./test_matrix         # Matrix operations
+./test_convolution    # 2D convolution
+./test_pooling        # Max pooling
+```
+
+### Benchmarks
+```bash
+./timing_benchmark    # Execution time consistency (real-time verification)
+```
+
+Expected results:
+- **Conv2D (16×16→14×14):** ~13-14μs, <5% P95 jitter
+- **MatMul (10×10×10×10):** ~6μs, <5% P95 jitter
+
+### Example Applications
+```bash
+./edge_detection      # Sobel filter on images
+```
+
+## Documentation
+
+Complete requirements traceability maintained in `docs/requirements/`:
+
+- **SRS-001:** Matrix Operations
+- **SRS-002:** Fixed-Point Arithmetic
+- **SRS-003:** Memory Management
+- **SRS-004:** Convolution
+- **SRS-005:** Activation Functions
+- **SRS-006:** Numerical Stability
+- **SRS-007:** Deterministic Execution Timing
+- **SRS-008:** Max Pooling
+
+Each requirement document includes:
+- Mathematical specifications
+- Compliance mappings (DO-178C, ISO 26262, IEC 62304)
+- Verification methods
+- Traceability to code and tests
+
+## Why This Matters
+
+### Medical Devices
+A pacemaker must deliver a signal within a **10ms window**. Non-deterministic timing causes life-threatening delays.
+
+### Autonomous Vehicles
+ISO 26262 ASIL-D requires **provable worst-case execution time**. Floating-point variance makes this impossible.
+
+### Aerospace
+DO-178C Level A demands **complete requirements traceability**. "Black box" ML cannot be certified.
+
+This engine provides the foundation for AI in systems where lives depend on the answer.
+
+## Compliance Support
+
+This implementation is designed to support certification under:
+- **DO-178C** (Aerospace software)
+- **IEC 62304** (Medical device software)
+- **ISO 26262** (Automotive functional safety)
+- **IEC 61508** (Industrial safety systems)
+
+Documentation includes:
+- Requirements Traceability Matrix (RTM)
+- Software Requirements Specifications (SRS)
+- Verification & Validation reports
+- WCET analysis methodology
+
+For compliance packages and hardware porting assistance, contact information below.
+
 ## Contributing
 
-We welcome contributions from senior systems engineers! See [CONTRIBUTING.md](CONTRIBUTING.md).
+We welcome contributions from systems engineers working in safety-critical domains. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 **Important:** All contributors must sign a [Contributor License Agreement](CONTRIBUTOR-LICENSE-AGREEMENT.md).
 
@@ -76,14 +206,25 @@ We welcome contributions from senior systems engineers! See [CONTRIBUTING.md](CO
 
 **Dual Licensed:**
 - **Open Source:** GNU General Public License v3.0 (GPLv3)
-- **Commercial:** Contact william@fstopify.com
+- **Commercial:** Available for proprietary use in safety-critical systems
 
-## Contact
+For commercial licensing and compliance documentation packages, contact below.
 
-**William Murray**  
+## About
+
+Built by **SpeyTech** in the Scottish Highlands.
+
+30 years of UNIX infrastructure experience applied to deterministic computing for safety-critical systems.
+
+Patent: UK GB2521625.0 - Murray Deterministic Computing Platform (MDCP)
+
+**Contact:**  
+William Murray  
 william@fstopify.com  
 [speytech.com](https://speytech.com)
 
 ---
+
+*Building deterministic AI systems for when lives depend on the answer.*
 
 Copyright © 2026 The Murray Family Innovation Trust. All rights reserved.
