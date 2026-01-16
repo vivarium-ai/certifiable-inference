@@ -8,6 +8,8 @@
 
 Pure C99. Zero dynamic allocation. Certifiable for DO-178C, IEC 62304, and ISO 26262.
 
+🔴 **Live Demo:** [inference.speytech.com](https://inference.speytech.com)
+
 ---
 
 ## The Problem
@@ -15,9 +17,10 @@ Pure C99. Zero dynamic allocation. Certifiable for DO-178C, IEC 62304, and ISO 2
 Most AI infrastructure is built for research, where "mostly reproducible" is good enough. In aerospace, medical devices, and autonomous systems, non-determinism isn't just a bug—it's a **liability**.
 
 Modern ML inference engines (TensorFlow Lite, ONNX Runtime, PyTorch Mobile) are non-deterministic:
-- Floating-point operations vary across platforms
-- Hash table iteration order is unpredictable  
-- Memory allocation affects behavior
+
+* Floating-point operations vary across platforms
+* Hash table iteration order is unpredictable
+* Memory allocation affects behavior
 
 For safety-critical systems, you cannot prove correctness if behavior varies.
 
@@ -28,12 +31,15 @@ For safety-critical systems, you cannot prove correctness if behavior varies.
 `certifiable-inference` replaces the "black box" of modern ML with a deterministic pipeline built on three pillars:
 
 ### 1. Exact Math
+
 Fixed-point arithmetic ensures `Input A + Model B = Output C` across all platforms (x86, ARM, RISC-V), forever. No floating-point drift.
 
-### 2. Bounded Resources  
+### 2. Bounded Resources
+
 No `malloc()` after initialization. O(1) memory and time complexity for every inference pass. Predictable behavior for real-time systems.
 
 ### 3. Traceable Logic
+
 Pure C99 implementation with zero hidden dependencies. Designed for MISRA-C compliance and formal verification.
 
 **Result:** Same input → Same output. Always. On any platform. Forever.
@@ -41,16 +47,26 @@ Pure C99 implementation with zero hidden dependencies. Designed for MISRA-C comp
 ## Status
 
 **Current components:**
-- ✅ Fixed-point arithmetic (Q16.16, deterministic across platforms)
-- ✅ Matrix operations (multiply, transpose, element-wise)
-- ✅ 2D Convolution (zero dynamic allocation, O(OH×OW×KH×KW))
-- ✅ Activation functions (ReLU, deterministic thresholding)
-- ✅ Max Pooling (2×2 stride-2, dimension reduction)
-- ✅ Timing verification (proven <5% jitter for 95th percentile)
-- 📋 Model loader (ONNX import - planned)
-- 📋 Quantization tools (FP32→Q16.16 conversion - planned)
+
+* ✅ Fixed-point arithmetic (Q16.16, deterministic across platforms)
+* ✅ Matrix operations (multiply, transpose, element-wise)
+* ✅ 2D Convolution (zero dynamic allocation, O(OH×OW×KH×KW))
+* ✅ Activation functions (ReLU, deterministic thresholding)
+* ✅ Max Pooling (2×2 stride-2, dimension reduction)
+* ✅ Timing verification (proven <5% jitter for 95th percentile)
+* 📋 Model loader (ONNX import - planned)
+* 📋 Quantization tools (FP32→Q16.16 conversion - planned)
 
 ## Quick Start
+
+### Build
+
+```bash
+mkdir build && cd build
+cmake ..
+make
+make test
+```
 
 ### Basic Inference Pipeline
 
@@ -85,47 +101,33 @@ fx_maxpool_2x2(&conv_out, &pool_out);     // Dimension reduction
 // Result: 7×7 feature map, bit-perfect across all platforms
 ```
 
-### Deterministic Hash Table
-
-```c
-#include "deterministic_hash.h"
-
-// Initialize table with fixed memory buffer
-uint8_t buffer[1024];
-d_table_t map;
-d_table_init(&map, buffer, sizeof(buffer));
-
-// Iteration order guaranteed by key-sort, not memory address
-d_table_insert(&map, "cardiac_rate", 72);
-d_table_insert(&map, "oxygen_sat", 98);
-
-// Iterate - always same order
-d_table_iterate(&map, print_callback);
-```
-
 ## Architecture
 
 ### Fixed-Point Arithmetic (Q16.16)
-- **16 integer bits** + **16 fractional bits**
-- Range: -32768.0 to +32767.99998
-- Resolution: 0.0000152588 (1/65536)
-- **Bit-perfect** across x86, ARM, RISC-V, MIPS
+
+* **16 integer bits** + **16 fractional bits**
+* Range: -32768.0 to +32767.99998
+* Resolution: 0.0000152588 (1/65536)
+* **Bit-perfect** across x86, ARM, RISC-V, MIPS
 
 ### Zero Dynamic Allocation
-- All buffers pre-allocated by caller
-- Stack usage: O(1) for all operations
-- No `malloc()`, `free()`, or heap fragmentation
-- Enables static memory analysis (required for DO-178C Level A)
+
+* All buffers pre-allocated by caller
+* Stack usage: O(1) for all operations
+* No `malloc()`, `free()`, or heap fragmentation
+* Enables static memory analysis (required for DO-178C Level A)
 
 ### Deterministic Execution
-- Fixed iteration counts (dimension-dependent, not data-dependent)
-- No floating-point operations
-- No data-dependent branches in hot paths
-- **Proven <5% jitter** at 95th percentile (see `tests/benchmarks/`)
+
+* Fixed iteration counts (dimension-dependent, not data-dependent)
+* No floating-point operations
+* No data-dependent branches in hot paths
+* **Proven <5% jitter** at 95th percentile (see `tests/benchmarks/`)
 
 ## Testing
 
 ### Unit Tests
+
 ```bash
 cd build
 ./test_fixed_point    # Fixed-point arithmetic
@@ -135,47 +137,52 @@ cd build
 ```
 
 ### Benchmarks
+
 ```bash
-./timing_benchmark    # Execution time consistency (real-time verification)
+./timing_benchmark    # Execution time consistency
 ```
 
 Expected results:
-- **Conv2D (16×16→14×14):** ~13-14μs, <5% P95 jitter
-- **MatMul (10×10×10×10):** ~6μs, <5% P95 jitter
 
-### Example Applications
-```bash
-./edge_detection      # Sobel filter on images
-```
+* **Conv2D (16×16→14×14):** ~13-14μs, <5% P95 jitter
+* **MatMul (10×10×10×10):** ~6μs, <5% P95 jitter
 
 ## Documentation
 
 Complete requirements traceability maintained in `docs/requirements/`:
 
-- **SRS-001:** Matrix Operations
-- **SRS-002:** Fixed-Point Arithmetic
-- **SRS-003:** Memory Management
-- **SRS-004:** Convolution
-- **SRS-005:** Activation Functions
-- **SRS-006:** Numerical Stability
-- **SRS-007:** Deterministic Execution Timing
-- **SRS-008:** Max Pooling
+* **SRS-001:** Matrix Operations
+* **SRS-002:** Fixed-Point Arithmetic
+* **SRS-003:** Memory Management
+* **SRS-004:** Convolution
+* **SRS-005:** Activation Functions
+* **SRS-006:** Numerical Stability
+* **SRS-007:** Deterministic Execution Timing
+* **SRS-008:** Max Pooling
 
-Each requirement document includes:
-- Mathematical specifications
-- Compliance mappings (DO-178C, ISO 26262, IEC 62304)
-- Verification methods
-- Traceability to code and tests
+Each requirement document includes mathematical specifications, compliance mappings, verification methods, and traceability to code and tests.
+
+## Related Projects
+
+| Project | Description | Demo |
+|---------|-------------|------|
+| **certifiable-inference** | Deterministic inference engine | [inference.speytech.com](https://inference.speytech.com) |
+| [certifiable-training](https://github.com/williamofai/certifiable-training) | Deterministic training engine | [training.speytech.com](https://training.speytech.com) |
+
+Together, `certifiable-inference` + `certifiable-training` provide a complete deterministic ML pipeline for safety-critical systems.
 
 ## Why This Matters
 
 ### Medical Devices
+
 A pacemaker must deliver a signal within a **10ms window**. Non-deterministic timing causes life-threatening delays.
 
 ### Autonomous Vehicles
+
 ISO 26262 ASIL-D requires **provable worst-case execution time**. Floating-point variance makes this impossible.
 
 ### Aerospace
+
 DO-178C Level A demands **complete requirements traceability**. "Black box" ML cannot be certified.
 
 This engine provides the foundation for AI in systems where lives depend on the answer.
@@ -183,18 +190,15 @@ This engine provides the foundation for AI in systems where lives depend on the 
 ## Compliance Support
 
 This implementation is designed to support certification under:
-- **DO-178C** (Aerospace software)
-- **IEC 62304** (Medical device software)
-- **ISO 26262** (Automotive functional safety)
-- **IEC 61508** (Industrial safety systems)
 
-Documentation includes:
-- Requirements Traceability Matrix (RTM)
-- Software Requirements Specifications (SRS)
-- Verification & Validation reports
-- WCET analysis methodology
+* **DO-178C** (Aerospace software)
+* **IEC 62304** (Medical device software)
+* **ISO 26262** (Automotive functional safety)
+* **IEC 61508** (Industrial safety systems)
 
-For compliance packages and hardware porting assistance, contact information below.
+Documentation includes Requirements Traceability Matrix (RTM), Software Requirements Specifications (SRS), Verification & Validation reports, and WCET analysis methodology.
+
+For compliance packages and hardware porting assistance, contact below.
 
 ## Contributing
 
@@ -205,10 +209,18 @@ We welcome contributions from systems engineers working in safety-critical domai
 ## License
 
 **Dual Licensed:**
-- **Open Source:** GNU General Public License v3.0 (GPLv3)
-- **Commercial:** Available for proprietary use in safety-critical systems
+
+* **Open Source:** GNU General Public License v3.0 (GPLv3)
+* **Commercial:** Available for proprietary use in safety-critical systems
 
 For commercial licensing and compliance documentation packages, contact below.
+
+## Patent Protection
+
+This implementation is built on the **Murray Deterministic Computing Platform (MDCP)**,
+protected by UK Patent **GB2521625.0**.
+
+For commercial licensing inquiries: william@fstopify.com
 
 ## About
 
