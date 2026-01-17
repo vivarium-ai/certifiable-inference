@@ -168,8 +168,9 @@ Each requirement document includes mathematical specifications, compliance mappi
 |---------|-------------|------|
 | **certifiable-inference** | Deterministic inference engine | [inference.speytech.com](https://inference.speytech.com) |
 | [certifiable-training](https://github.com/williamofai/certifiable-training) | Deterministic training engine | [training.speytech.com](https://training.speytech.com) |
+| [certifiable-data](https://github.com/williamofai/certifiable-data) | Deterministic data pipeline | — |
 
-Together, `certifiable-inference` + `certifiable-training` provide a complete deterministic ML pipeline for safety-critical systems.
+Together, `certifiable-data` + `certifiable-training` + `certifiable-inference` provide a complete deterministic ML pipeline for safety-critical systems.
 
 ## Why This Matters
 
