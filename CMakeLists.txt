@@ -9,7 +9,12 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -pedantic")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter")
 
 # Additional flags for static analysis
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fanalyzer")
+include(CheckCCompilerFlag)
+
+check_c_compiler_flag("-fanalyzer" HAS_FANALYZER)
+if (HAS_FANALYZER)
+  add_compile_options(-fanalyzer)
+endif()
 
 # Include directories
 include_directories(${PROJECT_SOURCE_DIR}/include)
