@@ -215,7 +215,7 @@ Add support for lower-precision Q8.8 format for memory-constrained applications.
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0 | 2026-01-14 | SpeyTech | Initial version |
+| 1.0 | 2026-01-14 | William Murray | Initial version |
 
 ---
 

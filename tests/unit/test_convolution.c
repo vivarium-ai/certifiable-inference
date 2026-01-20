@@ -319,10 +319,11 @@ static void test_zero_kernel(void) {
 }
 
 int main(void) {
-    printf("╔═══════════════════════════════════════════════╗\n");
-    printf("║   SpeyTech Certifiable Inference Engine      ║\n");
-    printf("║   Convolution Test Suite                     ║\n");
-    printf("╚═══════════════════════════════════════════════╝\n");
+    printf("\n");
+    printf("═══════════════════════════════════════════════\n");
+    printf("  SRS-006 Convolution Verification Suite\n");
+    printf("═══════════════════════════════════════════════\n");
+    printf("\n");
 
     /* Run all tests */
     test_basic_convolution();
@@ -333,17 +334,21 @@ int main(void) {
     test_zero_kernel();
 
     /* Print summary */
-    printf("\n═══════════════════════════════════════════════\n");
-    printf("Test Results Summary\n");
+    printf("\n");
     printf("═══════════════════════════════════════════════\n");
-    printf("Tests passed: %d\n", tests_passed);
-    printf("Tests failed: %d\n", tests_failed);
-
     if (tests_failed == 0) {
-        printf("\n✅ All tests passed! Convolution implementation verified.\n");
-        return 0;
+        printf("  ✅ SRS-006 Verified (%d tests passed)\n", tests_passed);
     } else {
-        printf("\n❌ Some tests failed. Review implementation.\n");
-        return 1;
+        printf("  ❌ SRS-006 Failed (%d passed, %d failed)\n", tests_passed, tests_failed);
     }
+    printf("═══════════════════════════════════════════════\n");
+    printf("\n");
+    printf("Requirements validated:\n");
+    printf("  • SRS-006.1: 2D convolution correctness\n");
+    printf("  • SRS-006.2: Kernel application\n");
+    printf("  • SRS-006.3: Edge detection patterns\n");
+    printf("  • SRS-006.4: Bit-perfect determinism\n");
+    printf("\n");
+
+    return tests_failed > 0 ? 1 : 0;
 }

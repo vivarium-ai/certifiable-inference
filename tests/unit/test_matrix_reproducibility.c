@@ -28,7 +28,7 @@
  * @traceability SRS-003.3
  */
 void test_matrix_multiply_basic(void) {
-    printf("Testing basic matrix multiplication... ");
+    printf("  Testing basic matrix multiplication... ");
 
     /* 2×2 matrices for simple verification
      * A = [1  2]    B = [5  6]    Expected C = [19  22]
@@ -70,7 +70,7 @@ void test_matrix_multiply_basic(void) {
  * @traceability SRS-003.3, V-003.1
  */
 void test_matrix_determinism(void) {
-    printf("Testing bit-perfect determinism (1000 iterations)... ");
+    printf("  Testing bit-perfect determinism (1000 iterations)... ");
 
     fixed_t buf_a[SMALL_DIM * SMALL_DIM];
     fixed_t buf_b[SMALL_DIM * SMALL_DIM];
@@ -110,7 +110,7 @@ void test_matrix_determinism(void) {
  * @traceability V-003.2
  */
 void test_address_independence(void) {
-    printf("Testing address independence... ");
+    printf("  Testing address independence... ");
 
     /* Allocate at different stack locations */
     fixed_t buf_a1[SMALL_DIM * SMALL_DIM];
@@ -160,7 +160,7 @@ void test_address_independence(void) {
  * @traceability SRS-003.4, V-003.3
  */
 void test_dimension_safety(void) {
-    printf("Testing dimension safety guards... ");
+    printf("  Testing dimension safety guards... ");
 
     fixed_t buf_a[6], buf_b[6], buf_c[4];
     fx_matrix_t A, B, C;
@@ -192,7 +192,7 @@ void test_dimension_safety(void) {
  * @traceability SRS-003.5
  */
 void test_overflow_protection(void) {
-    printf("Testing 64-bit accumulator overflow protection... ");
+    printf("  Testing 64-bit accumulator overflow protection... ");
 
     /* Create scenario where 32-bit accumulator would overflow
      * but 64-bit accumulator handles correctly */
@@ -239,7 +239,7 @@ void test_overflow_protection(void) {
  * @traceability SRS-003.5, SRS-003.6
  */
 void test_vector_dot_product(void) {
-    printf("Testing vector dot product... ");
+    printf("  Testing vector dot product... ");
 
     /* Simple test: [1, 2, 3] · [4, 5, 6] = 1*4 + 2*5 + 3*6 = 32 */
     fixed_t vec_a[3], vec_b[3];
@@ -264,7 +264,7 @@ void test_vector_dot_product(void) {
  * @traceability SRS-003.3
  */
 void test_matrix_addition(void) {
-    printf("Testing matrix addition... ");
+    printf("  Testing matrix addition... ");
 
     fixed_t buf_a[4], buf_b[4], buf_c[4];
     fx_matrix_t A, B, C;
@@ -297,9 +297,11 @@ void test_matrix_addition(void) {
 }
 
 int main(void) {
+    printf("\n");
     printf("═══════════════════════════════════════════════\n");
-    printf("SRS-003 Linear Algebra Verification Suite\n");
-    printf("═══════════════════════════════════════════════\n\n");
+    printf("  SRS-003 Linear Algebra Verification Suite\n");
+    printf("═══════════════════════════════════════════════\n");
+    printf("\n");
 
     test_matrix_multiply_basic();
     test_matrix_determinism();
@@ -309,21 +311,19 @@ int main(void) {
     test_vector_dot_product();
     test_matrix_addition();
 
-    printf("\n═══════════════════════════════════════════════\n");
-    printf("✅ SRS-003 Compliance Verified\n");
+    printf("\n");
     printf("═══════════════════════════════════════════════\n");
-    printf("\nAll requirements validated:\n");
-    printf("  • SRS-003.1: No dynamic allocation ✓\n");
-    printf("  • SRS-003.2: Row-major spatial locality ✓\n");
-    printf("  • SRS-003.3: GEMM bit-perfect determinism ✓\n");
-    printf("  • SRS-003.4: Dimension validation ✓\n");
-    printf("  • SRS-003.5: 64-bit accumulator protection ✓\n");
-    printf("  • SRS-003.6: Bounded execution (no data-dependent branching) ✓\n");
-    printf("\nCross-platform verification:\n");
-    printf("  • V-003.1: Bit-perfect across 1000 runs ✓\n");
-    printf("  • V-003.2: Address independence verified ✓\n");
-    printf("  • V-003.3: Dimension safety confirmed ✓\n");
-    printf("\nReady for neural network layer implementation.\n");
+    printf("  ✅ SRS-003 Verified (7 tests passed)\n");
+    printf("═══════════════════════════════════════════════\n");
+    printf("\n");
+    printf("Requirements validated:\n");
+    printf("  • SRS-003.1: No dynamic allocation\n");
+    printf("  • SRS-003.2: Row-major spatial locality\n");
+    printf("  • SRS-003.3: GEMM bit-perfect determinism\n");
+    printf("  • SRS-003.4: Dimension validation\n");
+    printf("  • SRS-003.5: 64-bit accumulator protection\n");
+    printf("  • SRS-003.6: Bounded execution\n");
+    printf("\n");
 
     return 0;
 }

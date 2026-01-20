@@ -25,7 +25,7 @@
  * @traceability SRS-004.2, V-004.1
  */
 void test_relu_correctness(void) {
-    printf("Testing ReLU correctness... ");
+    printf("  Testing ReLU correctness... ");
 
     fixed_t buf[6];
     fx_matrix_t mat;
@@ -58,7 +58,7 @@ void test_relu_correctness(void) {
  * @traceability SRS-004.1, V-004.2
  */
 void test_relu_in_place(void) {
-    printf("Testing ReLU in-place operation... ");
+    printf("  Testing ReLU in-place operation... ");
 
     fixed_t buf[4];
     fx_matrix_t mat;
@@ -93,7 +93,7 @@ void test_relu_in_place(void) {
  * @traceability SRS-004.2, SRS-004.4
  */
 void test_leaky_relu(void) {
-    printf("Testing Leaky ReLU correctness... ");
+    printf("  Testing Leaky ReLU correctness... ");
 
     fixed_t buf[4];
     fx_matrix_t mat;
@@ -124,7 +124,7 @@ void test_leaky_relu(void) {
  * @traceability SRS-004.3, V-004.3
  */
 void test_bias_addition(void) {
-    printf("Testing bias addition correctness... ");
+    printf("  Testing bias addition correctness... ");
 
     /* Matrix: 2×3 */
     fixed_t mat_buf[6];
@@ -166,7 +166,7 @@ void test_bias_addition(void) {
  * @traceability SRS-004.3, V-004.3
  */
 void test_bias_dimension_validation(void) {
-    printf("Testing bias dimension validation... ");
+    printf("  Testing bias dimension validation... ");
 
     /* Matrix: 2×3 */
     fixed_t mat_buf[6];
@@ -199,7 +199,7 @@ void test_bias_dimension_validation(void) {
  * @traceability SRS-004.1, SRS-004.2, SRS-004.3
  */
 void test_dense_layer_forward(void) {
-    printf("Testing complete dense layer forward pass... ");
+    printf("  Testing complete dense layer forward pass... ");
 
     /* Simple 2-input, 2-output layer
      * Input: [1, 2]
@@ -253,9 +253,11 @@ void test_dense_layer_forward(void) {
 }
 
 int main(void) {
+    printf("\n");
     printf("═══════════════════════════════════════════════\n");
-    printf("SRS-004 Activation Functions Verification Suite\n");
-    printf("═══════════════════════════════════════════════\n\n");
+    printf("  SRS-004 Activation Functions Verification Suite\n");
+    printf("═══════════════════════════════════════════════\n");
+    printf("\n");
 
     test_relu_correctness();
     test_relu_in_place();
@@ -264,20 +266,17 @@ int main(void) {
     test_bias_dimension_validation();
     test_dense_layer_forward();
 
-    printf("\n═══════════════════════════════════════════════\n");
-    printf("✅ SRS-004 Compliance Verified\n");
+    printf("\n");
     printf("═══════════════════════════════════════════════\n");
-    printf("\nAll requirements validated:\n");
-    printf("  • SRS-004.1: In-place processing ✓\n");
-    printf("  • SRS-004.2: ReLU determinism ✓\n");
-    printf("  • SRS-004.3: Bias vector addition ✓\n");
-    printf("  • SRS-004.4: Bounded fixed-point arithmetic ✓\n");
-    printf("\nVerification criteria met:\n");
-    printf("  • V-004.1: ReLU correctness verified ✓\n");
-    printf("  • V-004.2: In-place operation confirmed ✓\n");
-    printf("  • V-004.3: Bias broadcasting validated ✓\n");
-    printf("\n🎉 Complete dense layer forward pass working!\n");
-    printf("Ready for neural network inference.\n");
+    printf("  ✅ SRS-004 Verified (6 tests passed)\n");
+    printf("═══════════════════════════════════════════════\n");
+    printf("\n");
+    printf("Requirements validated:\n");
+    printf("  • SRS-004.1: In-place processing\n");
+    printf("  • SRS-004.2: ReLU determinism\n");
+    printf("  • SRS-004.3: Bias vector addition\n");
+    printf("  • SRS-004.4: Bounded fixed-point arithmetic\n");
+    printf("\n");
 
     return 0;
 }

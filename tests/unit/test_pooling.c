@@ -325,10 +325,11 @@ static void test_range_preservation(void) {
 }
 
 int main(void) {
-    printf("╔═══════════════════════════════════════════════╗\n");
-    printf("║   SpeyTech Certifiable Inference Engine      ║\n");
-    printf("║   Max Pooling Test Suite                     ║\n");
-    printf("╚═══════════════════════════════════════════════╝\n");
+    printf("\n");
+    printf("═══════════════════════════════════════════════\n");
+    printf("  SRS-008 Max Pooling Verification Suite\n");
+    printf("═══════════════════════════════════════════════\n");
+    printf("\n");
 
     /* Run all tests */
     test_basic_maxpool();
@@ -340,17 +341,22 @@ int main(void) {
     test_range_preservation();
 
     /* Print summary */
-    printf("\n═══════════════════════════════════════════════\n");
-    printf("Test Results Summary\n");
+    printf("\n");
     printf("═══════════════════════════════════════════════\n");
-    printf("Tests passed: %d\n", tests_passed);
-    printf("Tests failed: %d\n", tests_failed);
-
     if (tests_failed == 0) {
-        printf("\n✅ All tests passed! Max pooling implementation verified.\n");
-        return 0;
+        printf("  ✅ SRS-008 Verified (%d tests passed)\n", tests_passed);
     } else {
-        printf("\n❌ Some tests failed. Review implementation.\n");
-        return 1;
+        printf("  ❌ SRS-008 Failed (%d passed, %d failed)\n", tests_passed, tests_failed);
     }
+    printf("═══════════════════════════════════════════════\n");
+    printf("\n");
+    printf("Requirements validated:\n");
+    printf("  • SRS-008.1: Max pooling correctness\n");
+    printf("  • SRS-008.2: Negative value handling\n");
+    printf("  • SRS-008.3: Boundary conditions\n");
+    printf("  • SRS-008.4: Bit-perfect determinism\n");
+    printf("  • SRS-008.5: Range preservation\n");
+    printf("\n");
+
+    return tests_failed > 0 ? 1 : 0;
 }

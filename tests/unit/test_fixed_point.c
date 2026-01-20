@@ -28,7 +28,7 @@
  * @traceability SRS-002.1, SRS-002.2
  */
 void test_integer_conversion(void) {
-    printf("Testing integer conversion... ");
+    printf("  Testing integer conversion... ");
 
     /* Basic conversions */
     assert(fixed_from_int(0) == 0);
@@ -58,7 +58,7 @@ void test_integer_conversion(void) {
  * @note Float conversions only used for initialization, not runtime
  */
 void test_float_conversion(void) {
-    printf("Testing float conversion... ");
+    printf("  Testing float conversion... ");
 
     /* Basic conversions */
     float original = 123.456f;
@@ -82,7 +82,7 @@ void test_float_conversion(void) {
  * @traceability SRS-002.3
  */
 void test_addition(void) {
-    printf("Testing addition... ");
+    printf("  Testing addition... ");
 
     fixed_t a = fixed_from_float(2.5f);
     fixed_t b = fixed_from_float(3.7f);
@@ -110,7 +110,7 @@ void test_addition(void) {
  * @traceability SRS-002.3
  */
 void test_subtraction(void) {
-    printf("Testing subtraction... ");
+    printf("  Testing subtraction... ");
 
     fixed_t a = fixed_from_float(10.5f);
     fixed_t b = fixed_from_float(3.2f);
@@ -133,7 +133,7 @@ void test_subtraction(void) {
  * @traceability SRS-002.4
  */
 void test_multiplication_rounding(void) {
-    printf("Testing multiplication with rounding... ");
+    printf("  Testing multiplication with rounding... ");
 
     /* 2.5 * 2.5 = 6.25 */
     fixed_t a = fixed_from_float(2.5f);
@@ -167,7 +167,7 @@ void test_multiplication_rounding(void) {
  * @traceability SRS-002.5
  */
 void test_overflow_protection(void) {
-    printf("Testing 64-bit intermediate overflow protection... ");
+    printf("  Testing 64-bit intermediate overflow protection... ");
 
     /* Large values that would overflow 32-bit intermediate
      * 180.0 * 180.0 = 32400.0
@@ -200,7 +200,7 @@ void test_overflow_protection(void) {
  * @traceability SRS-002.3, SRS-002.6
  */
 void test_division(void) {
-    printf("Testing division... ");
+    printf("  Testing division... ");
 
     /* Basic division */
     fixed_t a = fixed_from_float(10.0f);
@@ -231,7 +231,7 @@ void test_division(void) {
  * @traceability SRS-002.3
  */
 void test_determinism(void) {
-    printf("Testing bit-perfect determinism... ");
+    printf("  Testing bit-perfect determinism... ");
 
     /* Same operation repeated 1000 times should produce identical results */
     fixed_t a = fixed_from_float(1.234f);
@@ -252,7 +252,7 @@ void test_determinism(void) {
  * @traceability SRS-002.3
  */
 void test_absolute_value(void) {
-    printf("Testing absolute value... ");
+    printf("  Testing absolute value... ");
 
     assert(fixed_abs(fixed_from_float(5.5f)) == fixed_from_float(5.5f));
     assert(fixed_abs(fixed_from_float(-5.5f)) == fixed_from_float(5.5f));
@@ -266,7 +266,7 @@ void test_absolute_value(void) {
  * @traceability SRS-002.3
  */
 void test_negation(void) {
-    printf("Testing negation... ");
+    printf("  Testing negation... ");
 
     fixed_t a = fixed_from_float(3.14f);
     assert(fixed_neg(a) == fixed_from_float(-3.14f));
@@ -281,7 +281,7 @@ void test_negation(void) {
  * @traceability SRS-002.3, SRS-002.4, V-002.3
  */
 void test_random_torture(void) {
-    printf("Testing random value torture test (1000 iterations)... ");
+    printf("  Testing random value torture test (1000 iterations)... ");
 
     srand(12345); /* Deterministic seed for reproducibility */
 
@@ -312,7 +312,7 @@ void test_random_torture(void) {
  * @traceability SRS-002.1
  */
 void test_constants(void) {
-    printf("Testing constants... ");
+    printf("  Testing constants... ");
 
     /* Verify constant definitions */
     assert(FIXED_SHIFT == 16);
@@ -328,9 +328,11 @@ void test_constants(void) {
 }
 
 int main(void) {
+    printf("\n");
     printf("═══════════════════════════════════════════════\n");
-    printf("SRS-002 Fixed-Point Verification Suite\n");
-    printf("═══════════════════════════════════════════════\n\n");
+    printf("  SRS-002 Fixed-Point Verification Suite\n");
+    printf("═══════════════════════════════════════════════\n");
+    printf("\n");
 
     test_constants();
     test_integer_conversion();
@@ -345,18 +347,20 @@ int main(void) {
     test_negation();
     test_random_torture();
 
-    printf("\n═══════════════════════════════════════════════\n");
-    printf("✅ SRS-002 Compliance Verified\n");
+    printf("\n");
     printf("═══════════════════════════════════════════════\n");
-    printf("\nAll requirements validated:\n");
-    printf("  • SRS-002.1: Q16.16 format ✓\n");
-    printf("  • SRS-002.2: Range [-32768, 32767.99998] ✓\n");
-    printf("  • SRS-002.3: Bit-perfect parity ✓\n");
-    printf("  • SRS-002.4: Round-to-nearest ✓\n");
-    printf("  • SRS-002.5: Overflow protection ✓\n");
-    printf("  • SRS-002.6: Division by zero handling ✓\n");
-    printf("  • SRS-002.7: Pure functions (reentrant) ✓\n");
-    printf("\nReady for safety-critical certification.\n");
+    printf("  ✅ SRS-002 Verified (12 tests passed)\n");
+    printf("═══════════════════════════════════════════════\n");
+    printf("\n");
+    printf("Requirements validated:\n");
+    printf("  • SRS-002.1: Q16.16 format\n");
+    printf("  • SRS-002.2: Range [-32768, 32767.99998]\n");
+    printf("  • SRS-002.3: Bit-perfect parity\n");
+    printf("  • SRS-002.4: Round-to-nearest\n");
+    printf("  • SRS-002.5: Overflow protection\n");
+    printf("  • SRS-002.6: Division by zero handling\n");
+    printf("  • SRS-002.7: Pure functions (reentrant)\n");
+    printf("\n");
 
     return 0;
 }
