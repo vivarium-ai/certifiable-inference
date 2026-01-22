@@ -12,6 +12,7 @@ export REVISION
 BUILD_DIR ?= build
 BUILD_TYPE ?= Release
 GENERATOR ?= Ninja
+PREFIX ?= /usr/local
 
 CMAKE ?= cmake
 CTEST ?= ctest
@@ -19,6 +20,15 @@ CTEST ?= ctest
 # ccache (enabled by default if available)
 CCACHE ?= ccache
 CCACHE_DIR ?= $(HOME)/.ccache
+
+# Export for scripts
+export BUILD_DIR
+export BUILD_TYPE
+export GENERATOR
+export PREFIX
+export CMAKE
+export CTEST
+export CCACHE
 export CCACHE_DIR
 
 CMAKE_CACHE_ARGS := \
@@ -26,35 +36,38 @@ CMAKE_CACHE_ARGS := \
 	-DCMAKE_C_COMPILER_LAUNCHER=$(CCACHE) \
 	-DCMAKE_CXX_COMPILER_LAUNCHER=$(CCACHE)
 
-.PHONY: all help deps config build test install release clean
+.PHONY: all help setup config build test install package release clean
 
 all: test
 
 ##@ Dependencies
-deps: ## Install project dependencies
-	./scripts/deps.sh
+setup: ## Setup project
+	./certifiable-build/scripts/setup.sh
 
 ##@ Development
 config: ## Configure the build
-	$(CMAKE) -S . -B $(BUILD_DIR) -G "$(GENERATOR)" $(CMAKE_CACHE_ARGS)
+	./certifiable-build/scripts/config.sh
 
 build: config ## Build the project
-	$(CMAKE) --build $(BUILD_DIR) --parallel
+	./certifiable-build/scripts/build.sh
 
 ##@ Testing
 test: build ## Run tests
-	$(CTEST) --test-dir $(BUILD_DIR) --output-on-failure
+	./certifiable-build/scripts/test.sh
 
 ##@ Project Management
 install: build ## Install the project
-	$(CMAKE) --install $(BUILD_DIR)
+	./certifiable-build/scripts/install.sh
 
-release: ## Build release artifacts
-	@echo "Building release..."
+package: ## Build release artifacts
+	./certifiable-build/scripts/package.sh
+
+release: ## Publish release artifacts
+	./certifiable-build/scripts/release.sh
 
 ##@ Maintenance
 clean: ## Remove all build artifacts
-	rm -rf $(EXES) $(DIST) $(BUILD_DIR)
+	./certifiable-build/scripts/clean.sh
 
 ##@ Documentation
 help: ## Display this help
