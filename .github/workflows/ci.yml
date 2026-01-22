@@ -1,12 +1,10 @@
 name: CI
 
 on:
+  pull_request:
   push:
     branches:
-      - "**"
-  pull_request:
-    branches:
-      - "**"
+      - master
 
 permissions:
   contents: read
@@ -16,43 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Test (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-
-    env:
-      BUILD_TYPE: Release
-      BUILD_DIR: build
-      GENERATOR: Ninja
-      CCACHE_DIR: ~/.ccache
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          ./scripts/deps.sh
-
-      - name: Restore ccache
-        uses: actions/cache@v4
-        with:
-          path: ~/.ccache
-          key: ccache-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
-          restore-keys: |
-            ccache-${{ runner.os }}-${{ github.ref_name }}-
-            ccache-${{ runner.os }}-
-
-      - name: Show ccache stats (before)
-        run: ccache -s || true
-
-      - name: Build + Test
-        run: make test
-
-      - name: Show ccache stats (after)
-        run: ccache -s || true
+  build:
+    uses: vivarium-ai/certifiable-github/.github/workflows/ci.yml@master
+    with:
+      build-target: certifiable-inference
