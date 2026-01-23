@@ -1,7 +1,7 @@
 # certifiable-inference
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/williamofai/certifiable-inference)
-[![Tests](https://img.shields.io/badge/tests-64%20passing-brightgreen)](https://github.com/williamofai/certifiable-inference)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/SpeyTech/certifiable-inference)
+[![Tests](https://img.shields.io/badge/tests-64%20passing-brightgreen)](https://github.com/SpeyTech/certifiable-inference)
 [![License](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
 [![MISRA Compliance](https://img.shields.io/badge/MISRA--C-2012-blue)](docs/misra-compliance.md)
 
@@ -195,11 +195,11 @@ Each requirement document includes mathematical specifications, compliance mappi
 
 | Project | Description |
 |---------|-------------|
-| [certifiable-data](https://github.com/williamofai/certifiable-data) | Deterministic data pipeline |
-| [certifiable-training](https://github.com/williamofai/certifiable-training) | Deterministic training engine |
-| [certifiable-quant](https://github.com/williamofai/certifiable-quant) | Deterministic quantization |
-| [certifiable-deploy](https://github.com/williamofai/certifiable-deploy) | Deterministic model packaging |
-| [certifiable-inference](https://github.com/williamofai/certifiable-inference) | Deterministic inference engine |
+| [certifiable-data](https://github.com/SpeyTech/certifiable-data) | Deterministic data pipeline |
+| [certifiable-training](https://github.com/SpeyTech/certifiable-training) | Deterministic training engine |
+| [certifiable-quant](https://github.com/SpeyTech/certifiable-quant) | Deterministic quantization |
+| [certifiable-deploy](https://github.com/SpeyTech/certifiable-deploy) | Deterministic model packaging |
+| [certifiable-inference](https://github.com/SpeyTech/certifiable-inference) | Deterministic inference engine |
 
 Together, these projects provide a complete deterministic ML pipeline for safety-critical systems:
 ```
