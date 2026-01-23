@@ -11,8 +11,7 @@ case "$OS" in
       sudo apt-get update
       sudo apt-get install -y --no-install-recommends \
         build-essential \
-        cmake \
-        ninja-build \
+        build2 \
         ccache
     else
       echo "Unsupported Linux distro (apt-get not found)"
@@ -25,7 +24,7 @@ case "$OS" in
       exit 1
     fi
     brew update
-    brew install cmake ninja ccache
+    brew install build2 ccache
     ;;
   *)
     echo "Unsupported OS: $OS"

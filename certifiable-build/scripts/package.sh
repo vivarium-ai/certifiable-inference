@@ -4,14 +4,16 @@ set -eu
 usage() {
   cat <<EOF
 Usage: $(basename "$0") [BUILD_DIR] [VERSION] [REVISION]
-  BUILD_DIR: Build directory (env: BUILD_DIR, default: build)
+  BUILD_DIR: Build directory (env: BUILD_DIR, default: ../<srcdir>-gcc)
   VERSION:   Package version (env: VERSION, required)
   REVISION:  Package revision (env: REVISION, required)
 EOF
   exit 1
 }
 
-BUILD_DIR="${1:-${BUILD_DIR:-build}}"
+cd "$(dirname "$0")/../.." || exit 1
+SRCDIR="$(basename "$(pwd)")"
+BUILD_DIR="${1:-${BUILD_DIR:-../$SRCDIR-gcc}}"
 VERSION="${2:-${VERSION:-}}"
 REVISION="${3:-${REVISION:-}}"
 

@@ -1,0 +1,6 @@
+import libs = ../src/
+
+exe{xor_gate}: c{xor_gate} $libs
+exe{edge_detection}: c{edge_detection} $libs
+exe{debug_conv}: c{debug_conv} $libs
+exe{debug_pool}: c{debug_pool} $libs

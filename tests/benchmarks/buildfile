@@ -1,0 +1,3 @@
+import libs = ../../src/
+
+exe{timing_benchmark}: c{test_timing_consistency} $libs

@@ -3,13 +3,12 @@ set -eu
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") [BUILD_DIR] [BUILD_TYPE] [GENERATOR] [CCACHE]
+Usage: $(basename "$0") [BUILD_DIR] [BUILD_TYPE] [CCACHE]
 
 Positional args override env vars.
 
-  BUILD_DIR:   Build directory (env: BUILD_DIR, default: build)
-  BUILD_TYPE:  Build type (env: BUILD_TYPE, default: Release)
-  GENERATOR:   CMake generator (env: GENERATOR, default: Ninja if available else Unix Makefiles)
+  BUILD_DIR:   Build directory (env: BUILD_DIR, default: ../<srcdir>-gcc)
+  BUILD_TYPE:  Build type (env: BUILD_TYPE, default: release)
   CCACHE:      Compiler cache command (env: CCACHE, default: ccache; set to "" or "false" to disable)
   PREFIX:      Install prefix (env: PREFIX, default: /usr/local)
 EOF
@@ -22,23 +21,30 @@ case "${1:-}" in
     ;;
 esac
 
-BUILD_DIR="${1:-${BUILD_DIR:-build}}"
-BUILD_TYPE="${2:-${BUILD_TYPE:-Release}}"
-GENERATOR="${3:-${GENERATOR:-Ninja}}"
-CCACHE="${4:-${CCACHE:-ccache}}"
+cd "$(dirname "$0")/../.." || exit 1
+SRCDIR="$(basename "$(pwd)")"
+BUILD_DIR="${1:-${BUILD_DIR:-../build2/$SRCDIR-default}}"
+BUILD_TYPE="${2:-${BUILD_TYPE:-release}}"
+CCACHE="${3:-${CCACHE:-ccache}}"
 PREFIX="${PREFIX:-/usr/local}"
-CMAKE="${CMAKE:-cmake}"
+B="${B:-b}"
 
 # Allow disabling ccache via CCACHE="" or CCACHE=false
-CCACHE_ARGS=""
 if [ -n "$CCACHE" ] && [ "$CCACHE" != "false" ] && command -v "$CCACHE" >/dev/null 2>&1; then
-  CCACHE_ARGS="-DCMAKE_C_COMPILER_LAUNCHER=$CCACHE -DCMAKE_CXX_COMPILER_LAUNCHER=$CCACHE"
+  CC="${CC:-cc}"
+  export CC="$CCACHE $CC"
 fi
 
-echo "Configuring: BUILD_DIR=$BUILD_DIR BUILD_TYPE=$BUILD_TYPE GENERATOR=$GENERATOR PREFIX=$PREFIX"
+echo "Configuring: BUILD_DIR=$BUILD_DIR BUILD_TYPE=$BUILD_TYPE PREFIX=$PREFIX"
 
-# shellcheck disable=SC2086
-"$CMAKE" -S . -B "$BUILD_DIR" -G "$GENERATOR" \
-  -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
-  -DCMAKE_INSTALL_PREFIX="$PREFIX" \
-  $CCACHE_ARGS
+function build2_config_check {
+  bdep config list @default > /dev/null 2>&1
+}
+
+if ! build2_config_check; then
+  bdep init --wipe -C "$BUILD_DIR" \
+    @default \
+    cc \
+    "config.config.mode=$BUILD_TYPE" \
+    "config.install.root=$PREFIX"
+fi

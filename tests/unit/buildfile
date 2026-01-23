@@ -1,0 +1,12 @@
+import libs = ../../src/
+
+# Unit tests - undefine NDEBUG even in Release
+c.coptions += -UNDEBUG
+
+exe{test_hash_basic}: c{test_hash_basic} $libs testscript
+exe{test_hash_consistency}: c{test_hash_consistency} $libs testscript
+exe{test_fixed_point}: c{test_fixed_point} $libs testscript
+exe{test_matrix_reproducibility}: c{test_matrix_reproducibility} $libs testscript
+exe{test_activations}: c{test_activations} $libs testscript
+exe{test_convolution}: c{test_convolution} $libs testscript
+exe{test_pooling}: c{test_pooling} $libs testscript

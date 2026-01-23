@@ -9,13 +9,11 @@ export VERSION
 export REVISION
 
 # Build configuration (overrideable)
-BUILD_DIR ?= build
-BUILD_TYPE ?= Release
-GENERATOR ?= Ninja
+# build2 requires out-of-source builds. Default to parent directory with compiler suffix.
+SRCDIR := $(notdir $(CURDIR))
+BUILD_DIR ?= ../build2/$(SRCDIR)-default
+BUILD_TYPE ?= release
 PREFIX ?= /usr/local
-
-CMAKE ?= cmake
-CTEST ?= ctest
 
 # ccache (enabled by default if available)
 CCACHE ?= ccache
@@ -24,17 +22,9 @@ CCACHE_DIR ?= $(HOME)/.ccache
 # Export for scripts
 export BUILD_DIR
 export BUILD_TYPE
-export GENERATOR
 export PREFIX
-export CMAKE
-export CTEST
 export CCACHE
 export CCACHE_DIR
-
-CMAKE_CACHE_ARGS := \
-	-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
-	-DCMAKE_C_COMPILER_LAUNCHER=$(CCACHE) \
-	-DCMAKE_CXX_COMPILER_LAUNCHER=$(CCACHE)
 
 .PHONY: all help setup config build test install package release clean
 

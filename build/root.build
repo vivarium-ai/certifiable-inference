@@ -1,0 +1,19 @@
+c.std = 99
+
+using c
+
+# Strict C compiler flags
+c.coptions += -Wall -Wextra -Werror -pedantic -Wno-unused-parameter
+
+# Enable -fanalyzer if available
+if ($c.id == 'gcc')
+  c.coptions += -fanalyzer
+
+# Math library
+c.libs += -lm
+
+# Include directories
+c.poptions =+ "-I$out_root" "-I$src_root/include"
+
+using install
+using test

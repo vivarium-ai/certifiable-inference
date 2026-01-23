@@ -3,20 +3,20 @@ set -eu
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") [BUILD_DIR] [EXES] [DIST]
-  BUILD_DIR: Build directory (env: BUILD_DIR, default: build)
-  EXES:      Executables directory (env: EXES, optional)
-  DIST:      Distribution directory (env: DIST, optional)
+Usage: $(basename "$0") [BUILD_DIR]
+  BUILD_DIR: Build directory (env: BUILD_DIR, default: ../<srcdir>-gcc)
 EOF
   exit 1
 }
 
-BUILD_DIR="${1:-${BUILD_DIR:-build}}"
-EXES="${2:-${EXES:-}}"
-DIST="${3:-${DIST:-}}"
+SRCDIR="$(basename "$(pwd)")"
+BUILD_DIR="${1:-${BUILD_DIR:-../$SRCDIR-gcc}}"
+B="${B:-b}"
+
+cd "$(dirname "$0")/../.." || exit 1
+
+[ -d "$BUILD_DIR" ] || { echo "Build directory not found. Nothing to clean."; exit 0; }
 
 echo "Cleaning build artifacts..."
-rm -rf "$BUILD_DIR"
-[ -n "$EXES" ] && rm -rf "$EXES"
-[ -n "$DIST" ] && rm -rf "$DIST"
+"$B" clean: "$BUILD_DIR"
 echo "Clean complete."

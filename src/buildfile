@@ -1,0 +1,3 @@
+lib{certifiable_inference}: core/c{*} containers/c{*} ../include/h{*}
+
+lib{certifiable_inference}: ../include/h{*}: install = include/
