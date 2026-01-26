@@ -1,4 +1,5 @@
-/config.build
-/root/
-/bootstrap/
-build/
+*.config.build
+*.config.build.save
+*.variables.build
+
+.DS_Store

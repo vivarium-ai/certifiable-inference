@@ -1,3 +1,11 @@
-lib{certifiable_inference}: core/c{*} containers/c{*} ../include/h{*}
+liba{certifiable_inference}: \
+  c{core/**.c} \
+  c{containers/**.c} \
+  h{../include/**.h}
+{
+  export = true
+  install = true
+  libs = -lm
+}
 
-lib{certifiable_inference}: ../include/h{*}: install = include/
+./: liba{certifiable_inference}

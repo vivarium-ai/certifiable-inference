@@ -1,6 +1,7 @@
 ./: {*/ -build/ -tools/ -certifiable-build/ -include/ -.github/ -docs/} manifest
 
-# Import subdirectories
-import libs = src/
-import exes = examples/
+./: src/ examples/ tests/
+
+import src = src/
+import examples = examples/
 import tests = tests/

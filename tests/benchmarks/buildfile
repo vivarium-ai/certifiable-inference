@@ -1,3 +1,10 @@
-import libs = ../../src/
+bench = exe{test_timing_consistency}
 
-exe{timing_benchmark}: c{test_timing_consistency} $libs
+exe{test_timing_consistency}: c{test_timing_consistency} ../../src/liba{certifiable_inference}
+
+$bench:
+{
+  test = true
+}
+
+./: $bench

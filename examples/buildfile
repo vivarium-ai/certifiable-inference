@@ -1,6 +1,8 @@
-import libs = ../src/
+exes = exe{xor_gate edge_detection debug_conv debug_pool}
 
-exe{xor_gate}: c{xor_gate} $libs
-exe{edge_detection}: c{edge_detection} $libs
-exe{debug_conv}: c{debug_conv} $libs
-exe{debug_pool}: c{debug_pool} $libs
+exe{xor_gate}: c{xor_gate} ../src/liba{certifiable_inference}
+exe{edge_detection}: c{edge_detection} ../src/liba{certifiable_inference}
+exe{debug_conv}: c{debug_conv} ../src/liba{certifiable_inference}
+exe{debug_pool}: c{debug_pool} ../src/liba{certifiable_inference}
+
+./: $exes
