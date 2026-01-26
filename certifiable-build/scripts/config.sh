@@ -37,7 +37,7 @@ fi
 
 echo "Configuring: BUILD_DIR=$BUILD_DIR BUILD_TYPE=$BUILD_TYPE PREFIX=$PREFIX"
 
-function build2_config_check {
+build2_config_check() {
   bdep config list @default > /dev/null 2>&1
 }
 
