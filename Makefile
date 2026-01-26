@@ -11,6 +11,7 @@ export REVISION
 # Build configuration (overrideable)
 # build2 requires out-of-source builds. Default to parent directory with compiler suffix.
 SRCDIR := $(notdir $(CURDIR))
+SCRIPTS_DIR ?= ./certifiable-build/scripts
 BUILD_DIR ?= ../build2/$(SRCDIR)-default
 BUILD_TYPE ?= release
 PREFIX ?= /usr/local
@@ -26,38 +27,41 @@ export PREFIX
 export CCACHE
 export CCACHE_DIR
 
-.PHONY: all help setup config build test install package release clean
+.PHONY: all help setup start-tt config build test install package release clean
 
 all: test
 
 ##@ Dependencies
 setup: ## Setup project
-	./certifiable-build/scripts/setup.sh
+	$(SCRIPTS_DIR)/setup.sh
 
 ##@ Development
 config: ## Configure the build
-	./certifiable-build/scripts/config.sh
+	$(SCRIPTS_DIR)/config.sh
 
 build: config ## Build the project
-	./certifiable-build/scripts/build.sh
+	$(SCRIPTS_DIR)/build.sh
+
+start-tt: ## Start the Tenstorrent container
+	$(SCRIPTS_DIR)/start-tt.sh
 
 ##@ Testing
 test: build ## Run tests
-	./certifiable-build/scripts/test.sh
+	$(SCRIPTS_DIR)/test.sh
 
 ##@ Project Management
 install: build ## Install the project
-	./certifiable-build/scripts/install.sh
+	$(SCRIPTS_DIR)/install.sh
 
 package: ## Build release artifacts
-	./certifiable-build/scripts/package.sh
+	$(SCRIPTS_DIR)/package.sh
 
 release: ## Publish release artifacts
-	./certifiable-build/scripts/release.sh
+	$(SCRIPTS_DIR)/release.sh
 
 ##@ Maintenance
 clean: ## Remove all build artifacts
-	./certifiable-build/scripts/clean.sh
+	$(SCRIPTS_DIR)/clean.sh
 
 ##@ Documentation
 help: ## Display this help
