@@ -1,20 +1,10 @@
 #!/bin/sh
 set -eu
 
-usage() {
-  cat <<EOF
-Usage: $(basename "$0") [BUILD_DIR]
-  BUILD_DIR: Build directory (env: BUILD_DIR, default: ../<srcdir>-gcc)
-EOF
-  exit 1
-}
+SCRIPT_DIR=$(CDPATH='' cd -- "$(dirname "$0")" && pwd)
+REPO_ROOT=$(CDPATH='' cd -- "$SCRIPT_DIR/../.." && pwd)
+cd "$REPO_ROOT"
 
-cd "$(dirname "$0")/../.." || exit 1
-SRCDIR="$(basename "$(pwd)")"
-BUILD_DIR="${1:-${BUILD_DIR:-../$SRCDIR-gcc}}"
-B="${B:-b}"
+BDEP=${BDEP:-bdep}
 
-[ -d "$BUILD_DIR" ] || { echo "Build directory not found. Run build first."; exit 1; }
-
-echo "Running tests..."
-"$B" test: "$BUILD_DIR"
+"$BDEP" test -a @clang @gcc

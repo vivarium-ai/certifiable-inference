@@ -2,49 +2,53 @@
 set -eu
 
 usage() {
+  code=${1:-1}
   cat <<EOF
-Usage: $(basename "$0") [BUILD_DIR] [BUILD_TYPE] [CCACHE]
+Usage: $(basename "$0") [BUILD_TYPE]
 
-Positional args override env vars.
+Defaults:
+  BUILD_TYPE: release
 
-  BUILD_DIR:   Build directory (env: BUILD_DIR, default: ../<srcdir>-gcc)
-  BUILD_TYPE:  Build type (env: BUILD_TYPE, default: release)
-  CCACHE:      Compiler cache command (env: CCACHE, default: ccache; set to "" or "false" to disable)
-  PREFIX:      Install prefix (env: PREFIX, default: /usr/local)
+Environment:
+  PREFIX       Install prefix (default: /usr/local)
+  PROJECT      Project name (default: basename of repo root)
+  BDEP         bdep command (default: bdep)
+  CONFIGS_ROOT Base configs dir (default: ../build2/configs)
 EOF
+  exit "$code"
 }
 
 case "${1:-}" in
-  -h|--help)
-    usage
-    exit 0
-    ;;
+  -h|--help) usage 0 ;;
 esac
 
-cd "$(dirname "$0")/../.." || exit 1
-SRCDIR="$(basename "$(pwd)")"
-BUILD_DIR="${1:-${BUILD_DIR:-../build2/$SRCDIR-default}}"
-BUILD_TYPE="${2:-${BUILD_TYPE:-release}}"
-CCACHE="${3:-${CCACHE:-ccache}}"
-PREFIX="${PREFIX:-/usr/local}"
-B="${B:-b}"
+SCRIPT_DIR=$(CDPATH='' cd -- "$(dirname "$0")" && pwd)
+REPO_ROOT=$(CDPATH='' cd -- "$SCRIPT_DIR/../.." && pwd)
+cd "$REPO_ROOT"
 
-# Allow disabling ccache via CCACHE="" or CCACHE=false
-if [ -n "$CCACHE" ] && [ "$CCACHE" != "false" ] && command -v "$CCACHE" >/dev/null 2>&1; then
-  CC="${CC:-cc}"
-  export CC="$CCACHE $CC"
-fi
+PROJECT=${PROJECT:-$(basename "$REPO_ROOT")}
+BDEP=${BDEP:-bdep}
+CONFIGS_ROOT=${CONFIGS_ROOT:-../build2/configs}
+BUILD_TYPE=${1:-${BUILD_TYPE:-release}}
+PREFIX=${PREFIX:-/usr/local}
 
-echo "Configuring: BUILD_DIR=$BUILD_DIR BUILD_TYPE=$BUILD_TYPE PREFIX=$PREFIX"
+clang_dir="${CONFIGS_ROOT}/${PROJECT}-clang"
+gcc_dir="${CONFIGS_ROOT}/${PROJECT}-gcc"
 
-build2_config_check() {
-  bdep config list @default > /dev/null 2>&1
-}
+mkdir -p "$clang_dir" "$gcc_dir"
 
-if ! build2_config_check; then
-  bdep init --wipe -C "$BUILD_DIR" \
-    @default \
-    cc \
-    "config.config.mode=$BUILD_TYPE" \
-    "config.install.root=$PREFIX"
-fi
+"$BDEP" config list @clang >/dev/null 2>&1 || \
+  "$BDEP" init -C "$clang_dir" @clang cc config.c=clang
+
+"$BDEP" config list @gcc >/dev/null 2>&1 || \
+  "$BDEP" init -C "$gcc_dir" @gcc cc config.c=gcc
+
+"$BDEP" init @clang @gcc
+
+"$BDEP" config set @clang \
+  "config.config.mode=$BUILD_TYPE" \
+  "config.install.root=$PREFIX" >/dev/null 2>&1 || true
+
+"$BDEP" config set @gcc \
+  "config.config.mode=$BUILD_TYPE" \
+  "config.install.root=$PREFIX" >/dev/null 2>&1 || true

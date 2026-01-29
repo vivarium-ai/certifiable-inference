@@ -1,15 +1,10 @@
 #!/bin/sh
 set -eu
 
-usage() {
-  cat <<EOF
-Usage: $(basename "$0") [BUILD_DIR]
-  BUILD_DIR: Build directory (env: BUILD_DIR, default: ../<srcdir>-gcc)
-EOF
-  exit 1
-}
+SCRIPT_DIR=$(CDPATH='' cd -- "$(dirname "$0")" && pwd)
+REPO_ROOT=$(CDPATH='' cd -- "$SCRIPT_DIR/../.." && pwd)
+cd "$REPO_ROOT"
 
-cd "$(dirname "$0")/../.." || exit 1
+BDEP=${BDEP:-bdep}
 
-echo "Building..."
-b
+"$BDEP" update -a @clang @gcc
