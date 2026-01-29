@@ -29,7 +29,7 @@ export CCACHE_DIR
 
 .PHONY: all help setup start-tt config build test install package release clean
 
-all: test
+all: config build test
 
 ##@ Dependencies
 setup: ## Setup project
@@ -39,14 +39,14 @@ setup: ## Setup project
 config: ## Configure the build
 	$(SCRIPTS_DIR)/config.sh
 
-build: config ## Build the project
+build: ## Build the project
 	$(SCRIPTS_DIR)/build.sh
 
 start-tt: ## Start the Tenstorrent container
 	$(SCRIPTS_DIR)/start-tt.sh
 
 ##@ Testing
-test: build ## Run tests
+test: ## Run tests
 	$(SCRIPTS_DIR)/test.sh
 
 ##@ Project Management
