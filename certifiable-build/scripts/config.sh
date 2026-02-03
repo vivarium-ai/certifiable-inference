@@ -35,20 +35,16 @@ PREFIX=${PREFIX:-/usr/local}
 clang_dir="${CONFIGS_ROOT}/${PROJECT}-clang"
 gcc_dir="${CONFIGS_ROOT}/${PROJECT}-gcc"
 
-mkdir -p "$clang_dir" "$gcc_dir"
+mkdir -p "$CONFIGS_ROOT"
 
-"$BDEP" config list @clang >/dev/null 2>&1 || \
-  "$BDEP" init -C "$clang_dir" @clang cc config.c=clang
+"$BDEP" deinit --force -a @gcc @clang >/dev/null 2>&1 || true
+"$BDEP" config remove @gcc @clang >/dev/null 2>&1 || true
 
-"$BDEP" config list @gcc >/dev/null 2>&1 || \
-  "$BDEP" init -C "$gcc_dir" @gcc cc config.c=gcc
-
-"$BDEP" init @clang @gcc
-
-"$BDEP" config set @clang \
+"$BDEP" init --wipe -C "$gcc_dir" @gcc \
+  cc config.cc=gcc \
   "config.config.mode=$BUILD_TYPE" \
-  "config.install.root=$PREFIX" >/dev/null 2>&1 || true
+  "config.install.root=$PREFIX"
 
-"$BDEP" config set @gcc \
-  "config.config.mode=$BUILD_TYPE" \
-  "config.install.root=$PREFIX" >/dev/null 2>&1 || true
+"$BDEP" init --wipe -C "$clang_dir" @clang \
+  cc config.cc=clang \
+  "config.config.mode=$BUILD_TYPE"
