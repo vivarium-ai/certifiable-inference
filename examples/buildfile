@@ -2,9 +2,9 @@ exes = exe{xor_gate edge_detection debug_conv debug_pool}
 
 ./: ../src/
 
-exe{xor_gate}: c{xor_gate} ../src/liba{certifiable_inference} $m
-exe{edge_detection}: c{edge_detection} ../src/liba{certifiable_inference} $m
-exe{debug_conv}: c{debug_conv} ../src/liba{certifiable_inference} $m
-exe{debug_pool}: c{debug_pool} ../src/liba{certifiable_inference} $m
+exe{xor_gate}: c{xor_gate} ../src/liba{certifiable_inference}
+exe{edge_detection}: c{edge_detection} ../src/liba{certifiable_inference}
+exe{debug_conv}: c{debug_conv} ../src/liba{certifiable_inference}
+exe{debug_pool}: c{debug_pool} ../src/liba{certifiable_inference}
 
 ./: $exes
