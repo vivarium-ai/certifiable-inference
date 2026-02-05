@@ -37,6 +37,10 @@ CXX_GCC="$(command -v g++)"
 CC_CLANG="$(command -v clang)"
 CXX_CLANG="$(command -v clang++)"
 
+if [ -n "${GITHUB_WORKSPACE:-}" ]; then
+  ln -sf "$CC_GCC" /usr/local/bin/gcc-11
+fi
+
 clang_dir="${CONFIGS_ROOT}/${PROJECT}-clang"
 gcc_dir="${CONFIGS_ROOT}/${PROJECT}-gcc"
 
@@ -48,8 +52,8 @@ mkdir -p "$CONFIGS_ROOT"
 "$BDEP" --no-default-options init --wipe -C "$clang_dir" @clang cc \
   "config.c=$CC_CLANG" "config.cxx=$CXX_CLANG" \
   "config.config.mode=$BUILD_TYPE" \
-  "config.install.root=$PREFIX" || true
+  "config.install.root=$PREFIX"
 
 "$BDEP" --no-default-options init --wipe -C "$gcc_dir" @gcc cc \
   "config.c=$CC_GCC" "config.cxx=$CXX_GCC" \
-  "config.config.mode=$BUILD_TYPE" || true
+  "config.config.mode=$BUILD_TYPE"
