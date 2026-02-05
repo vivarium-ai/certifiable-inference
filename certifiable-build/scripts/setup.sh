@@ -35,8 +35,8 @@ echo "Homebrew version:"
 brew --version
 
 brew update
-brew install --overwrite --force gcc clang build2
-brew link --overwrite --force gcc clang build2
+brew install --overwrite --force gcc llvm build2
+brew link --overwrite --force gcc llvm build2
 
 gcc --version
 g++ --version
