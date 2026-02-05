@@ -50,6 +50,11 @@ mkdir -p "$CONFIGS_ROOT"
   "config.config.mode=$BUILD_TYPE" \
   "config.install.root=$PREFIX"
 
+cfg_dir="$(bdep config list @gcc | awk '{print $2}')"
+echo "CFG=$cfg_dir"
+# cc module stores derived toolchain values in config.build
+find "$cfg_dir" -maxdepth 3 -name config.build -print -exec sed -n '1,200p' {} \;
+
 "$BDEP" --no-default-options init --wipe -C "$clang_dir" @clang cc \
   "config.c=$CC_CLANG" "config.cxx=$CXX_CLANG" \
   "config.config.mode=$BUILD_TYPE"
