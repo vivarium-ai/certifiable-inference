@@ -35,8 +35,13 @@ echo "Homebrew version:"
 brew --version
 
 brew update
-brew install build2
+brew install --overwrite --force gcc clang build2
+brew link --overwrite --force gcc clang build2
 
+gcc --version
+g++ --version
+clang --version
+clang++ --version
 bdep --version
 
 echo "System dependencies installed successfully."
