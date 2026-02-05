@@ -37,6 +37,7 @@ CXX_GCC="$(command -v g++)"
 CC_CLANG="$(command -v clang)"
 CXX_CLANG="$(command -v clang++)"
 
+# There is an extremely weird bug seen on GitHub default runners
 if [ -n "${GITHUB_WORKSPACE:-}" ]; then
   ln -sf "$CC_GCC" /usr/local/bin/gcc-11
 fi
@@ -46,8 +47,10 @@ gcc_dir="${CONFIGS_ROOT}/${PROJECT}-gcc"
 
 mkdir -p "$CONFIGS_ROOT"
 
-"$BDEP" deinit --force -a @gcc @clang >/dev/null 2>&1 || true
-"$BDEP" config remove @gcc @clang >/dev/null 2>&1 || true
+"$BDEP" deinit --force -a @gcc >/dev/null 2>&1 || true
+"$BDEP" deinit --force -a @clang >/dev/null 2>&1 || true
+"$BDEP" config remove @gcc >/dev/null 2>&1 || true
+"$BDEP" config remove @clang >/dev/null 2>&1 || true
 
 "$BDEP" --no-default-options init --wipe -C "$clang_dir" @clang cc \
   "config.c=$CC_CLANG" "config.cxx=$CXX_CLANG" \
