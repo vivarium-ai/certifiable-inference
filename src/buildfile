@@ -8,7 +8,4 @@ liba{certifiable_inference}: \
   libs = -lm
 }
 
-if ($c.target.system == 'linux')
-  liba{certifiable_inference}: lib{m}
-
 ./: liba{certifiable_inference}

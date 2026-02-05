@@ -2,6 +2,9 @@ bench = exe{test_timing_consistency}
 
 exe{test_timing_consistency}: c{test_timing_consistency} ../../src/liba{certifiable_inference}
 
+if ($c.target.system == 'linux')
+  exe{test_timing_consistency}: lib{m}
+
 $bench:
 {
   test = true
