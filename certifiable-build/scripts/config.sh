@@ -42,6 +42,10 @@ gcc_dir="${CONFIGS_ROOT}/${PROJECT}-gcc"
 
 mkdir -p "$CONFIGS_ROOT"
 
+export BDEP_DEF_OPT=0
+export BPKG_DEF_OPT=0
+export BUILD2_DEF_OPT=0
+
 "$BDEP" deinit --force -a @gcc @clang >/dev/null 2>&1 || true
 "$BDEP" config remove @gcc @clang >/dev/null 2>&1 || true
 
