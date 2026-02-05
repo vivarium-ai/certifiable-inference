@@ -2,7 +2,7 @@ bench = exe{test_timing_consistency}
 
 $bench: c{test_timing_consistency} ../../src/liba{certifiable_inference}
 {
-  c.loptions += -lm
+  c.libs += -lm
 }
 
 $bench:
