@@ -45,11 +45,11 @@ mkdir -p "$CONFIGS_ROOT"
 "$BDEP" deinit --force -a @gcc @clang >/dev/null 2>&1 || true
 "$BDEP" config remove @gcc @clang >/dev/null 2>&1 || true
 
-"$BDEP" init --wipe -C "$gcc_dir" @gcc cc \
+"$BDEP" --no-default-options init --wipe -C "$gcc_dir" @gcc cc \
   "config.c=$CC_GCC" "config.cxx=$CXX_GCC" \
   "config.config.mode=$BUILD_TYPE" \
   "config.install.root=$PREFIX"
 
-"$BDEP" init --wipe -C "$clang_dir" @clang cc \
+"$BDEP" --no-default-options init --wipe -C "$clang_dir" @clang cc \
   "config.c=$CC_CLANG" "config.cxx=$CXX_CLANG" \
   "config.config.mode=$BUILD_TYPE"
