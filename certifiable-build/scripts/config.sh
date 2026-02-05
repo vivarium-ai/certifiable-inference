@@ -42,23 +42,14 @@ gcc_dir="${CONFIGS_ROOT}/${PROJECT}-gcc"
 
 mkdir -p "$CONFIGS_ROOT"
 
-export BDEP_DEF_OPT=0
-export BPKG_DEF_OPT=0
-export BUILD2_DEF_OPT=0
-
 "$BDEP" deinit --force -a @gcc @clang >/dev/null 2>&1 || true
 "$BDEP" config remove @gcc @clang >/dev/null 2>&1 || true
 
-"$BDEP" --no-default-options init --wipe -C "$gcc_dir" @gcc cc \
-  "config.c=$CC_GCC" "config.cxx=$CXX_GCC" \
-  "config.config.mode=$BUILD_TYPE" \
-  "config.install.root=$PREFIX" || true
-
-cfg_dir="$(bdep config list @gcc | awk '{print $2}')"
-echo "CFG=$cfg_dir"
-# cc module stores derived toolchain values in config.build
-find "$cfg_dir" -maxdepth 3 -name config.build -print -exec sed -n '1,200p' {} \;
-
 "$BDEP" --no-default-options init --wipe -C "$clang_dir" @clang cc \
   "config.c=$CC_CLANG" "config.cxx=$CXX_CLANG" \
+  "config.config.mode=$BUILD_TYPE" \
+  "config.install.root=$PREFIX"
+
+"$BDEP" --no-default-options init --wipe -C "$gcc_dir" @gcc cc \
+  "config.c=$CC_GCC" "config.cxx=$CXX_GCC" \
   "config.config.mode=$BUILD_TYPE"
