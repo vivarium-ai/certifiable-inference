@@ -32,6 +32,11 @@ CONFIGS_ROOT=${CONFIGS_ROOT:-../build2/configs}
 BUILD_TYPE=${1:-${BUILD_TYPE:-release}}
 PREFIX=${PREFIX:-/usr/local}
 
+CC_GCC="$(command -v gcc)"
+CXX_GCC="$(command -v g++)"
+CC_CLANG="$(command -v clang)"
+CXX_CLANG="$(command -v clang++)"
+
 clang_dir="${CONFIGS_ROOT}/${PROJECT}-clang"
 gcc_dir="${CONFIGS_ROOT}/${PROJECT}-gcc"
 
@@ -41,10 +46,10 @@ mkdir -p "$CONFIGS_ROOT"
 "$BDEP" config remove @gcc @clang >/dev/null 2>&1 || true
 
 "$BDEP" init --wipe -C "$gcc_dir" @gcc cc \
-  config.c=gcc config.cxx=g++ \
+  "config.c=$CC_GCC" "config.cxx=$CXX_GCC" \
   "config.config.mode=$BUILD_TYPE" \
   "config.install.root=$PREFIX"
 
 "$BDEP" init --wipe -C "$clang_dir" @clang cc \
-  config.c=clang config.cxx=clang++ \
+  "config.c=$CC_CLANG" "config.cxx=$CXX_CLANG" \
   "config.config.mode=$BUILD_TYPE"
