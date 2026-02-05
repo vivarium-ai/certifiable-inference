@@ -48,7 +48,7 @@ mkdir -p "$CONFIGS_ROOT"
 "$BDEP" --no-default-options init --wipe -C "$gcc_dir" @gcc cc \
   "config.c=$CC_GCC" "config.cxx=$CXX_GCC" \
   "config.config.mode=$BUILD_TYPE" \
-  "config.install.root=$PREFIX"
+  "config.install.root=$PREFIX" || true
 
 cfg_dir="$(bdep config list @gcc | awk '{print $2}')"
 echo "CFG=$cfg_dir"
