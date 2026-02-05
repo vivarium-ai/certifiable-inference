@@ -5,7 +5,7 @@ liba{certifiable_inference}: \
 {
   export = true
   install = true
-  libs = -lm
+  c.loptions += -lm
 }
 
 ./: liba{certifiable_inference}
