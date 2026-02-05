@@ -1,0 +1,6 @@
+project = certifiable-inference
+
+using version
+using config
+using install
+using test

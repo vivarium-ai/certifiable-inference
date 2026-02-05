@@ -9,52 +9,59 @@ export VERSION
 export REVISION
 
 # Build configuration (overrideable)
-BUILD_DIR ?= build
-BUILD_TYPE ?= Release
-GENERATOR ?= Ninja
-
-CMAKE ?= cmake
-CTEST ?= ctest
+# build2 requires out-of-source builds. Default to parent directory with compiler suffix.
+SRCDIR := $(notdir $(CURDIR))
+SCRIPTS_DIR ?= ./certifiable-build/scripts
+BUILD_DIR ?= ../build2/$(SRCDIR)-default
+BUILD_TYPE ?= release
+PREFIX ?= /usr/local
 
 # ccache (enabled by default if available)
 CCACHE ?= ccache
 CCACHE_DIR ?= $(HOME)/.ccache
+
+# Export for scripts
+export BUILD_DIR
+export BUILD_TYPE
+export PREFIX
+export CCACHE
 export CCACHE_DIR
 
-CMAKE_CACHE_ARGS := \
-	-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
-	-DCMAKE_C_COMPILER_LAUNCHER=$(CCACHE) \
-	-DCMAKE_CXX_COMPILER_LAUNCHER=$(CCACHE)
+.PHONY: all help setup start-tt config build test install package release clean
 
-.PHONY: all help deps config build test install release clean
-
-all: test
+all: config build test
 
 ##@ Dependencies
-deps: ## Install project dependencies
-	./scripts/deps.sh
+setup: ## Setup project
+	$(SCRIPTS_DIR)/setup.sh
 
 ##@ Development
 config: ## Configure the build
-	$(CMAKE) -S . -B $(BUILD_DIR) -G "$(GENERATOR)" $(CMAKE_CACHE_ARGS)
+	$(SCRIPTS_DIR)/config.sh
 
-build: config ## Build the project
-	$(CMAKE) --build $(BUILD_DIR) --parallel
+build: ## Build the project
+	$(SCRIPTS_DIR)/build.sh
+
+start-tt: ## Start the Tenstorrent container
+	$(SCRIPTS_DIR)/start-tt.sh
 
 ##@ Testing
-test: build ## Run tests
-	$(CTEST) --test-dir $(BUILD_DIR) --output-on-failure
+test: ## Run tests
+	$(SCRIPTS_DIR)/test.sh
 
 ##@ Project Management
 install: build ## Install the project
-	$(CMAKE) --install $(BUILD_DIR)
+	$(SCRIPTS_DIR)/install.sh
 
-release: ## Build release artifacts
-	@echo "Building release..."
+package: ## Build release artifacts
+	$(SCRIPTS_DIR)/package.sh
+
+release: ## Publish release artifacts
+	$(SCRIPTS_DIR)/release.sh
 
 ##@ Maintenance
 clean: ## Remove all build artifacts
-	rm -rf $(EXES) $(DIST) $(BUILD_DIR)
+	$(SCRIPTS_DIR)/clean.sh
 
 ##@ Documentation
 help: ## Display this help

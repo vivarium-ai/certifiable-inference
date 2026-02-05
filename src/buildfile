@@ -1,0 +1,10 @@
+liba{certifiable_inference}: \
+  c{core/**.c} \
+  c{containers/**.c} \
+  h{../include/**.h}
+{
+  export = true
+  install = true
+}
+
+./: liba{certifiable_inference}
