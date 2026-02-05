@@ -48,8 +48,8 @@ mkdir -p "$CONFIGS_ROOT"
 "$BDEP" --no-default-options init --wipe -C "$clang_dir" @clang cc \
   "config.c=$CC_CLANG" "config.cxx=$CXX_CLANG" \
   "config.config.mode=$BUILD_TYPE" \
-  "config.install.root=$PREFIX"
+  "config.install.root=$PREFIX" || true
 
 "$BDEP" --no-default-options init --wipe -C "$gcc_dir" @gcc cc \
   "config.c=$CC_GCC" "config.cxx=$CXX_GCC" \
-  "config.config.mode=$BUILD_TYPE"
+  "config.config.mode=$BUILD_TYPE" || true
