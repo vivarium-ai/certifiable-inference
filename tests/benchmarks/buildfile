@@ -1,10 +1,12 @@
 bench = exe{test_timing_consistency}
 
-exe{test_timing_consistency}: c{test_timing_consistency} ../../src/liba{certifiable_inference}
+$bench: c{test_timing_consistency} ../../src/liba{certifiable_inference}
+{
+  libs += -lm
+}
 
 $bench:
 {
-  libs = -lm
   test = true
 }
 
