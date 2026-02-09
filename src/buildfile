@@ -1,6 +1,5 @@
 liba{certifiable_inference}: \
-  c{core/**.c} \
-  c{containers/**.c} \
+  c{**/**.c} \
   h{../include/**.h}
 {
   export = true
