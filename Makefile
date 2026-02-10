@@ -16,16 +16,10 @@ BUILD_DIR ?= ../build2/$(SRCDIR)-default
 BUILD_TYPE ?= release
 PREFIX ?= /usr/local
 
-# ccache (enabled by default if available)
-CCACHE ?= ccache
-CCACHE_DIR ?= $(HOME)/.ccache
-
 # Export for scripts
 export BUILD_DIR
 export BUILD_TYPE
 export PREFIX
-export CCACHE
-export CCACHE_DIR
 
 .PHONY: all help setup start-tt config build test install package release clean
 
