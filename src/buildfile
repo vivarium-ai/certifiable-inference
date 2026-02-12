@@ -3,7 +3,6 @@ liba{certifiable_inference}: \
   h{../include/**.h}
 {
   export = true
-  install = true
 }
 
 ./: liba{certifiable_inference}
