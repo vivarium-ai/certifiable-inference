@@ -1,5 +1,10 @@
 exes = exe{xor_gate edge_detection debug_conv debug_pool}
 
+$exes:
+{
+  install = bin/certifiable-inference/
+}
+
 ./: ../src/
 
 exe{xor_gate}: c{xor_gate} ../src/liba{certifiable_inference}

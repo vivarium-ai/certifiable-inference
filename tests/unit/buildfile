@@ -11,6 +11,7 @@ exe{test_pooling}: c{test_pooling} ../../src/liba{certifiable_inference}
 $tests:
 {
   c.coptions += -UNDEBUG
+  install = false
   test = true
 }
 
